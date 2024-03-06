@@ -1,0 +1,59 @@
+html {
+    font-size: 40px;
+}
+
+body {
+    background: black;
+    color: white;
+    overflow: hidden;
+}
+
+button {
+    font-size: 50px;
+    width: 200px;
+    height: 100px;
+    cursor: pointer;
+    color: white;
+    border: 2px solid white;
+    background: linear-gradient(60deg, rgb(153, 8, 148), rgb(144, 24, 24));
+    align-self: center;
+
+    transition: width 0.2s ease-out, height 0.2s ease-out;
+}
+
+button:hover {
+    width: 220px;
+    height: 120px;
+    background: linear-gradient(60deg, rgb(208, 21, 161), rgb(224, 48, 48));
+}
+
+.title {
+    color: rgb(177, 1, 1);
+    text-shadow: 0px 0px 13px red;;
+    margin-top: 10%;
+    margin-bottom: 40px;
+    font-size: 100px;
+}
+
+.hidden {
+    display: none;
+}
+
+
+.player {
+    background-color: rgb(49, 142, 255);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100px;
+    height: 100px;
+}
+
+.enemy {
+    background-color: red;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 50px;
+    height: 50px;
+}
