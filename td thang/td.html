@@ -9,12 +9,14 @@
 </head>
 <body id="body">
     <div id="sideBar">
-        <h1>Inspired title</h1>
+        <h1>American tetris lol</h1>
         <div id="towerHolder">
-            <div onclick="chooseTower('default')" class="towerDisplay"></div>
-            <div onclick="chooseTower('sniper')" class="towerDisplay"></div>
-            <div onclick="chooseTower('gunner')" class="towerDisplay" class="towerDisplay"></div>
+            <div onclick="chooseTower('default', 100)" style="background-color: gray;" class="towerDisplay">100</div>
+            <div onclick="chooseTower('sniper', 400)" style="background-color: yellow;" class="towerDisplay">400</div>
+            <div onclick="chooseTower('gunner', 250)" style="background-color: purple;" class="towerDisplay">250</div>
         </div>
+
+        <p id="cashDisplay">Cash: 500</p>
     </div>
 
     <script src="td.js"></script>

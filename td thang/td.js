@@ -4,6 +4,8 @@ let showPlaceableTower;
 
 let gracePediod = true;
 
+let cash = 500;
+
 document.addEventListener("mousemove", () => {
     if (canPlaceTower == true) {
         showPlaceableTower.style.left = event.clientX + 'px'
@@ -52,26 +54,37 @@ document.addEventListener("mouseup", () => {
     }
 })
 
-function chooseTower(element) {
+function chooseTower(element, cost) {
 
-    showPlaceableTower = document.createElement('div')
-    showPlaceableTower.classList.add('tower')
+    if (cash >= cost) {
+        showPlaceableTower = document.createElement('div')
+        showPlaceableTower.classList.add('tower')
 
-    switch (element) {
-        case 'default':
-            showPlaceableTower.classList.add('defaultTower')
-        break;
-        case 'sniper':
-            showPlaceableTower.classList.add('sniperTower')
-        break;
-        case 'gunner':
-            showPlaceableTower.classList.add('gunnerTower')
-        break;
+        switch (element) {
+            case 'default':
+                showPlaceableTower.classList.add('defaultTower')
+                break;
+            case 'sniper':
+                showPlaceableTower.classList.add('sniperTower')
+                break;
+            case 'gunner':
+                showPlaceableTower.classList.add('gunnerTower')
+                break;
+        }
+
+        document.getElementById('body').appendChild(showPlaceableTower)
+
+        canPlaceTower = true
+
+        cash = cash - cost
+        document.getElementById('cashDisplay').innerHTML = 'Cash: ' + cash
+
+    } else {
+        alert('Not enough cash')
     }
 
-    document.getElementById('body').appendChild(showPlaceableTower)
-
-    canPlaceTower = true
+    
+    
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -112,6 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (parseInt(element.style.top) + element.offsetHeight == window.innerHeight) {
                 clearInterval(clock)
                 clearInterval(clock2)
+
+                clearInterval(defaultBulletClock)
+                clearInterval(sniperBulletClock)
+                clearInterval(gunnerBulletClock)
             }
         })
 
@@ -147,6 +164,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     bullet.remove()
                     enemy.remove()
 
+                    cash = cash + 20
+                    document.getElementById('cashDisplay').innerHTML = 'Cash: ' + cash
+
                     let sound = new Audio('tdSound/enemyKilled.mp3');
                     sound.play()
                 }
@@ -155,9 +175,12 @@ document.addEventListener('DOMContentLoaded', () => {
     },10)
 })
 
+let enemyTimer = 10000;
+let enemyAmountRandomizer = 2;
+
 function startEnemyWaves() {
     clock2 = setInterval(() => {
-        enemyAmount = Math.floor(Math.random() * 5) + 1
+        enemyAmount = Math.floor(Math.random() * enemyAmountRandomizer) + 1
 
         for (let i = 0; i < enemyAmount; i++) {
             enemy = document.createElement('div')
@@ -168,8 +191,11 @@ function startEnemyWaves() {
 
             document.getElementById('body').appendChild(enemy)
         }
+
+        enemyAmountRandomizer++
+        enemyTimer--
         
-    }, 5000)
+    }, Math.floor(Math.random() * enemyTimer) + 1)
 }
 
 function startBulletClock() {
