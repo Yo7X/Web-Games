@@ -1,9 +1,28 @@
 body {
     background: black;
+    background-repeat:no-repeat;
+    background-size: 100%;
     color: white;
     margin: 0%;
     padding: 0%;
     overflow: hidden;
+}
+
+#infoDisplay {
+    position: fixed;
+    left: 90%;
+    top: 0px;
+    font-size: 30px;
+}
+
+#tutorialBox {
+    position: fixed;
+    text-align: center;
+    font-size: 35px;
+    user-select: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-30%, -60%);
 }
 
 #sideBar{
@@ -11,8 +30,37 @@ body {
     border: 1px solid red;
     position: fixed;
     height: 100%;
-    width: 15%;
+    width: 30%;
     text-align: center;
+}
+
+#sideBarToggle {
+    background-color: green;
+    position: absolute;
+    left: 30.5%;
+    top: 0.5%;
+    height: 50px;
+    width: 50px;
+    justify-content: center;
+    text-align: center;
+    font-size: 30px;
+    font-family: cursive;
+    user-select: none;
+}
+
+#cancelTowerPlacement {
+    background-color: red;
+    position: absolute;
+    left: 90%;
+    top: 90%;
+    height: 150px;
+    width: 150px;
+    justify-content: center;
+    text-align: center;
+    font-size: 30px;
+    font-family: cursive;
+    user-select: none;
+    display: none;
 }
 
 #towerHolder {
@@ -21,7 +69,7 @@ body {
 
 .towerDisplay {
     display: flex;
-    flex-basis: 33%;
+    flex-basis: 25%;
     border-radius: 5%;
     outline: 1px solid black;
     margin: 5px;
@@ -30,7 +78,20 @@ body {
     color: black;
     text-shadow: 1px 1px 20px white;
 
-    height: 20px;
+    height: 120px;
+
+    align-items: end;
+    justify-content: center;
+}
+
+.towerDisplay > p {
+    position: absolute;
+    font-size: 30px;
+}
+
+.towerDisplay > img {
+    width: 100%;
+    align-self: first baseline;
 }
 
 .towerDisplay:hover {
@@ -70,6 +131,12 @@ body {
     background-color: purple;
     width: 25px;
     height: 25px;
+}
+
+.bomberTower {
+    background-color: rgb(0, 128, 109);
+    width: 40px;
+    height: 100px;
 }
 
 .bullet {

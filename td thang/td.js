@@ -1,10 +1,19 @@
 let canPlaceTower;
 let towerType;
 let showPlaceableTower;
+let cancelPlacement = false;
 
 let gracePediod = true;
 
-let cash = 500;
+let tut = 0;
+
+let cash = 1000;
+
+let playList = [
+    `chill01.wav`,
+    `chill02.wav`,
+    `chill03.wav`
+];
 
 document.addEventListener("mousemove", () => {
     if (canPlaceTower == true) {
@@ -15,9 +24,25 @@ document.addEventListener("mousemove", () => {
     }
 })
 
+document.getElementById('cancelTowerPlacement').addEventListener('mouseover', () => {
+    cancelPlacement = true
+})
+
+document.getElementById('sideBarToggle').addEventListener('mouseover', () => {
+    cancelPlacement = false
+})
+
 
 document.addEventListener("mouseup", () => {
     if (canPlaceTower == true) {
+        if (cancelPlacement == true) {
+            cash = cash + showPlaceableTower.cost
+            showPlaceableTower.remove()
+            document.getElementById('cashDisplay').innerHTML = 'Cash: ' + cash
+            document.getElementById('cancelTowerPlacement').style.display = 'none'
+            return;
+        }
+
         blocked = false
 
         let trialTower = showPlaceableTower.getBoundingClientRect();
@@ -51,6 +76,18 @@ document.addEventListener("mouseup", () => {
             startEnemyWaves()
             startBulletClock()
         }
+
+        if (tut == 0) {
+            document.getElementById('defaultTut').remove()
+
+            nextStep = document.createElement('div')
+            nextStep.id = 'tut' + tut
+            nextStep.innerHTML = 'Open the menu on the top left to place another tower.'
+            document.getElementById('tutorialBox').appendChild(nextStep)
+            tut++
+        }
+
+        document.getElementById('cancelTowerPlacement').style.display = 'none'
     }
 })
 
@@ -70,6 +107,9 @@ function chooseTower(element, cost) {
             case 'gunner':
                 showPlaceableTower.classList.add('gunnerTower')
                 break;
+            case 'bomber':
+                showPlaceableTower.classList.add('bomberTower')
+                break;
         }
 
         document.getElementById('body').appendChild(showPlaceableTower)
@@ -78,6 +118,13 @@ function chooseTower(element, cost) {
 
         cash = cash - cost
         document.getElementById('cashDisplay').innerHTML = 'Cash: ' + cash
+
+        showPlaceableTower.cost = cost
+
+        sideBarOpen = true
+        sideBarToggleLogic()
+
+        document.getElementById('cancelTowerPlacement').style.display = 'block'
 
     } else {
         alert('Not enough cash')
@@ -96,11 +143,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (tower != element) {
                     canstop = false
 
-                    if (parseInt(element.style.left) > parseInt(tower.style.left) && parseInt(element.style.left) < parseInt(tower.style.left) + tower.offsetWidth) {
-                        canstop = true
-                    } else if (parseInt(element.style.left) + element.offsetWidth < parseInt(tower.style.left) + tower.offsetWidth && parseInt(element.style.left) + element.offsetWidth > parseInt(tower.style.left)) {
+                    let checkTower = tower.getBoundingClientRect()
+                    let twer = element.getBoundingClientRect()
+
+                    if (
+                        twer.right < checkTower.left ||
+                        twer.left > checkTower.right ||
+                        twer.bottom < checkTower.top ||
+                        twer.top > checkTower.bottom
+                    ) { } else {
                         canstop = true
                     }
+
+                    // Old logic hst in case
+                    // if (parseInt(element.style.left) > parseInt(tower.style.left) && parseInt(element.style.left) < parseInt(tower.style.left) + tower.offsetWidth) {
+                    //     canstop = true
+                    // } else if (parseInt(element.style.left) + element.offsetWidth < parseInt(tower.style.left) + tower.offsetWidth && parseInt(element.style.left) + element.offsetWidth > parseInt(tower.style.left)) {
+                    //     canstop = true
+                    // }
 
                     if (canstop == true && parseInt(element.style.top) + element.offsetHeight >= parseInt(tower.style.top)) {
                         if (element.classList.contains('floating')) {
@@ -130,6 +190,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(sniperBulletClock)
                 clearInterval(gunnerBulletClock)
             }
+
+            let enemyBound = element.getBoundingClientRect()
+            document.querySelectorAll('.bullet').forEach((bullet) => {
+                let bulletBound = bullet.getBoundingClientRect()
+                if (
+                    bulletBound.right < enemyBound.left ||
+                    bulletBound.left > enemyBound.right ||
+                    bulletBound.bottom < enemyBound.top ||
+                    bulletBound.top > enemyBound.bottom
+                ) { } else {
+                    temphealth = element.health - bullet.power
+
+                    if (temphealth <= 0) {
+                        bullet.remove()
+                        element.remove()
+                        cash = cash + (element.ogHealth * 2)
+                        document.getElementById('cashDisplay').innerHTML = 'Cash: ' + cash
+
+                        let sound = new Audio('tdSound/enemyKilled.mp3');
+                        sound.play()
+                    } else {
+                        bullet.remove()
+                        element.health = temphealth
+                        element.innerHTML = temphealth
+                        let sound = new Audio('tdSound/enemyHit.mp3');
+                        sound.play()
+                    }
+                }
+            })
         })
 
         document.querySelectorAll('.bullet').forEach((bullet) => {
@@ -149,34 +238,47 @@ document.addEventListener('DOMContentLoaded', () => {
             if (parseInt(bullet.style.top) <= 0 || parseInt(bullet.style.top) >= window.innerHeight || parseInt(bullet.style.left) <= 0 || parseInt(bullet.style.left) >= window.innerWidth) {
                 bullet.remove()
             }
-
-            let bulletBound = bullet.getBoundingClientRect()
-
-            document.querySelectorAll('.enemy').forEach((enemy) => {
-                let enemyBound = enemy.getBoundingClientRect()
-
-                if (
-                    bulletBound.right < enemyBound.left ||
-                    bulletBound.left > enemyBound.right ||
-                    bulletBound.bottom < enemyBound.top ||
-                    bulletBound.top > enemyBound.bottom
-                ) {} else {
-                    bullet.remove()
-                    enemy.remove()
-
-                    cash = cash + 20
-                    document.getElementById('cashDisplay').innerHTML = 'Cash: ' + cash
-
-                    let sound = new Audio('tdSound/enemyKilled.mp3');
-                    sound.play()
-                }
-            })
         })
     },10)
+
+    function selectBackgroundMusic() {
+        let music = new Audio(`music/${playList[Math.floor(Math.random() * playList.length)]}`)
+        music.play()
+
+        music.addEventListener('ended', () => {
+            selectBackgroundMusic();
+        });
+    }
+    selectBackgroundMusic()
+
+    document.getElementById('sideBarToggle').addEventListener('click', () => {
+        sideBarToggleLogic()
+    })
 })
 
+let sideBarOpen = true;
+
+function sideBarToggleLogic() {
+    if (sideBarOpen == true) {
+        document.getElementById('sideBar').style.display = 'none'
+        document.getElementById('sideBarToggle').style.left = '0.5%'
+        document.getElementById('sideBarToggle').innerHTML = '>>'
+        sideBarOpen = false
+    } else {
+        document.getElementById('sideBar').style.display = 'block'
+        document.getElementById('sideBarToggle').style.left = '30.5%'
+        document.getElementById('sideBarToggle').innerHTML = '<<'
+        sideBarOpen = true
+    }
+}
+
 let enemyTimer = 10000;
+let minEnemyTimer = 5000;
 let enemyAmountRandomizer = 2;
+let minEnemyHealth = 1;
+let maxEnemyHealth = 5;
+let wave = 0;
+let playerTargeted;
 
 function startEnemyWaves() {
     clock2 = setInterval(() => {
@@ -188,14 +290,31 @@ function startEnemyWaves() {
 
             enemy.style.top = '0px'
             enemy.style.left = Math.floor(Math.random() * window.innerWidth - enemy.offsetWidth) + 'px'
+            enemy.health = Math.floor(Math.random() * maxEnemyHealth) + minEnemyHealth
+            enemy.ogHealth = enemy.health
+            enemy.innerHTML = enemy.health
+
+            enemy.addEventListener('click', () => {
+                playerTargeted = enemy
+            })
 
             document.getElementById('body').appendChild(enemy)
         }
 
-        enemyAmountRandomizer++
+        if (enemyAmountRandomizer < 11) {
+            enemyAmountRandomizer++
+        }
         enemyTimer--
+        minEnemyTimer--
+
+        maxEnemyHealth = maxEnemyHealth + Math.floor(Math.random() * 4)
+        minEnemyHealth = minEnemyHealth + Math.floor(Math.random() * 2)
+
+
+        wave++
+        document.getElementById('WaveDisplay').innerHTML = `Wave: ${wave}`
         
-    }, Math.floor(Math.random() * enemyTimer) + 1)
+    }, Math.floor(Math.random() * enemyTimer) + minEnemyTimer)
 }
 
 function startBulletClock() {
@@ -213,12 +332,18 @@ function startBulletClock() {
 
                 let besttargetTop = 0;
                 let bestTarget;
-                document.querySelectorAll('.enemy').forEach((enemy) => {
-                    if (parseInt(enemy.style.top) + enemy.offsetHeight > besttargetTop) {
-                        besttargetTop = parseInt(enemy.style.top) + enemy.offsetHeight
-                        bestTarget = enemy
-                    }
-                })
+
+                if (playerTargeted) {
+                    bestTarget = playerTargeted
+                    playerTargeted = null
+                } else {
+                    document.querySelectorAll('.enemy').forEach((enemy) => {
+                        if (parseInt(enemy.style.top) + enemy.offsetHeight > besttargetTop) {
+                            besttargetTop = parseInt(enemy.style.top) + enemy.offsetHeight
+                            bestTarget = enemy
+                        }
+                    })
+                }
 
                 bestTarget.style.outline = '1px solid white'
 
@@ -248,12 +373,18 @@ function startBulletClock() {
 
                 let besttargetTop = 0;
                 let bestTarget;
-                document.querySelectorAll('.enemy').forEach((enemy) => {
-                    if (parseInt(enemy.style.top) + enemy.offsetHeight > besttargetTop) {
-                        besttargetTop = parseInt(enemy.style.top) + enemy.offsetHeight
-                        bestTarget = enemy
-                    }
-                })
+
+                if (playerTargeted) {
+                    bestTarget = playerTargeted
+                    playerTargeted = null
+                } else {
+                    document.querySelectorAll('.enemy').forEach((enemy) => {
+                        if (parseInt(enemy.style.top) + enemy.offsetHeight > besttargetTop) {
+                            besttargetTop = parseInt(enemy.style.top) + enemy.offsetHeight
+                            bestTarget = enemy
+                        }
+                    })
+                }
 
                 bestTarget.style.outline = '1px solid white'
 
@@ -283,12 +414,18 @@ function startBulletClock() {
 
                 let besttargetTop = 0;
                 let bestTarget;
-                document.querySelectorAll('.enemy').forEach((enemy) => {
-                    if (parseInt(enemy.style.top) + enemy.offsetHeight > besttargetTop) {
-                        besttargetTop = parseInt(enemy.style.top) + enemy.offsetHeight
-                        bestTarget = enemy
-                    }
-                })
+                
+                if (playerTargeted) {
+                    bestTarget = playerTargeted
+                    playerTargeted = null
+                } else {
+                    document.querySelectorAll('.enemy').forEach((enemy) => {
+                        if (parseInt(enemy.style.top) + enemy.offsetHeight > besttargetTop) {
+                            besttargetTop = parseInt(enemy.style.top) + enemy.offsetHeight
+                            bestTarget = enemy
+                        }
+                    })
+                }
 
                 bestTarget.style.outline = '1px solid white'
 
@@ -303,4 +440,41 @@ function startBulletClock() {
 
         }
     }, 250)
+
+    bomberBulletClock = setInterval(() => {
+        if (document.querySelectorAll('.enemy').length != 0 && document.querySelectorAll('.bomberTower').length != 0) {
+
+            document.querySelectorAll('.bomberTower').forEach((tower) => {
+                bullet = document.createElement('div')
+                bullet.classList.add('bullet')
+                bullet.style.background = 'rgb(0, 128, 109)';
+                bullet.power = 50
+                bullet.speed = 3
+                bullet.style.left = parseInt(tower.style.left) + parseInt(tower.offsetWidth) / 2 + 'px'
+                bullet.style.top = parseInt(tower.style.top) + 'px'
+
+                let besttargetTop = 0;
+                let bestTarget;
+                
+                if (playerTargeted) {
+                    bestTarget = playerTargeted
+                    playerTargeted = null
+                } else {
+                    document.querySelectorAll('.enemy').forEach((enemy) => {
+                        if (parseInt(enemy.style.top) + enemy.offsetHeight > besttargetTop) {
+                            besttargetTop = parseInt(enemy.style.top) + enemy.offsetHeight
+                            bestTarget = enemy
+                        }
+                    })
+                }
+
+                bestTarget.style.outline = '1px solid white'
+
+                bullet.destinationLeft = (parseInt(bestTarget.style.left) + bestTarget.offsetWidth) - 50
+                bullet.destinationTop = (parseInt(bestTarget.style.top) + bestTarget.offsetHeight) - 50
+
+                document.getElementById('body').appendChild(bullet)
+            })
+        }
+    }, 5000)
 }
