@@ -6,40 +6,42 @@
     <title>Document</title>
 
     <link rel="stylesheet" href="td.css" type="text/css">
+
+    <link rel="icon" href="images/tero.png" type="image/x-icon">
 </head>
 <body id="body">
-    <div id="bgCover" style="position: absolute; height: 100%; width: 100%; background: url(images/overlay.mp4);"></div>
+    <div id="bgCover" style="position: absolute; height: 100%; width: 100%; background: rgba(0, 0, 0, 0.718);"></div>
     <div id="sideBar">
-        <h1>Tower shop</h1>
+        <h1>Shop</h1>
+        <hr>
         <div id="towerHolder">
-            <div onclick="chooseTower('default', 100)" style="background-color: gray;" class="towerDisplay">
-                <img src="images/defaultTower.png" alt="Failed to load tower image" title="A good well rounded tower equiped to defend against any kind of enemy. Its bullets are fast but won't do much if the target is far away.">
+            <div onclick="chooseTower('default', 100)" style="background-color: gray;" class="towerDisplay" customTT="This tower hurles large asteroids towards invaders using the latest and gratest gravity guns available. Giant space rocks tend to not do much to really strong enemies but these stations will take out most weaker foes with ease.">
+                <img src="images/tetrogunDefaultTowerArt.png" alt="Failed to load image">
                 <p>100</p>
             </div>
 
-            <div onclick="chooseTower('gunner', 250)" style="background-color: purple;" class="towerDisplay">
-                <img src="images/gunnerTower.png" alt="Failed to load tower image"
-                    title="This tower shoots out a barage of slow moving low damage bullets at its enemies. Sometimes in war quantity trumps quality (it also tends to cause a lot of lag).">
+            <div onclick="chooseTower('gunner', 250)" style="background-color: purple;" class="towerDisplay" customTT="Ever since the colonisation of planets became trivial once rare and sought after crystals have plumeted in value, so much so we now use them as ammo. When being feed a constant stream of crystal clusters shard spiters will crush them down and fire tones of sharp shrapnel in random directions eviserating hordes of smaller enemies.">
+                <img src="images/crystalSpiterArt.png" alt="Failed to load image">
                 <p>250</p>
             </div>
 
-            <div onclick="chooseTower('sniper', 400)" style="background-color: yellow;" class="towerDisplay">
-                <img src="images/sniperTower.png" alt="Failed to load tower image" title="This towers bullet speed and presision make it stand out agaist the rest, however it does take a while to reload.">
+            <div onclick="chooseTower('sniper', 400)" style="background-color: yellow;" class="towerDisplay" customTT="Missiles are able to be shot though space with great speed causing devistating damage to invaders. Missile stations harbor much higher accuracy at long range due to its bullet speed.">
+                <img src="images/missileArt.png" alt="Failed to load image">
                 <p>400</p>
             </div>
 
-            <div onclick="chooseTower('bomber', 600)" style="background-color: rgb(0, 128, 109);" class="towerDisplay">
-                <img src="" alt="Failed to load tower image" title="A high damaging tower with improved accuracy and a low fire rate. It will take out stonger enemies but struggles against swarms of foes.">
+            <div onclick="chooseTower('bomber', 600)" style="background-color: rgb(0, 128, 109);" class="towerDisplay" customTT="It takes quite a while to synthesize each concoction in adition to its payload not being able to move very fast however almost nothing can survive the virus contained within.">
+                <img src="images/virusArt.png" alt="Failed to load image">
                 <p>600</p>
+            </div>
+
+            <div onclick="chooseTower('wall', 200)" style="background-color: rgb(128, 92, 0);" class="towerDisplay" customTT="A quickly thrown together collection of asteroids. This barier will keep out most weaker invaders for a considerable amount of time but will crumble easily agaist stronger enemies.">
+                <img src="" alt="Failed to load image">
+                <p>200</p>
             </div>
         </div>
     </div>
-    <div id="sideBarToggle">
-        <<
-    </div>
-    <div id="cancelTowerPlacement">
-        X
-    </div>
+    <div id="sideBarToggle"></div>
 
     <div id="infoDisplay">
         <p id="WaveDisplay">Wave: N/A</p>
@@ -47,10 +49,15 @@
     </div>
 
     <div id="tutorialBox">
-        <div id="defaultTut">
-            <h1>Tetro tower defence</h1>
-            <h3>By yo7</h3>
-            <p>(Place any tower on the map to start)</p>
+        <div id="tutCloseButton" onclick="closeTut()" title="Close">X</div>
+        <div id="tutText">
+            <h1>Tetrigun</h1>
+            <h3>A game about shooting stuff</h3>
+            <p>Use the bottons bellow to navigate tutorial and learn important information :)</p>
+        </div>
+        <div id="tutNavHolder">
+            <div id="tutBackstep" onclick="tutTextChange('back')"><< Previous</div>
+            <div id="tutAdvance" onclick="tutTextChange('forward')">Next >></div>
         </div>
     </div>
 
